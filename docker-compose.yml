@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  redis:
+    image: docker.io/bitnami/redis:7.2
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      # - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - /path/to/redis-persistence:/bitnami/redis/data
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tg-bot
+    networks:
+      - net
+    depends_on:
+      - redis
+      - database
+networks:
+  net:
+    driver: bridge
